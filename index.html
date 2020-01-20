@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<title></title>
+</head>
+<body>
+
+	<section>
+    	<h1>Linked List - JavaScript</h1>
+        <input type="text" id="valueAdd">
+        <label><input name="radio" type="radio" id="first" checked>First</label>
+        <label><input name="radio" type="radio" id="last">Last</label>
+        <label><input name="radio" type="radio" id="at">At</label>
+        <input type="number" min="1" value="1" id="valueAt">
+        <input type="button" value="Add"
+            onclick="Add()">
+    </section>
+
+    <section>
+        <input type="number" min="1" value="1" id="indexRmv">
+        <input type="button" value="Remove" onclick="Remove()">
+    </section>
+
+    <section>
+        <table>
+            <tr id="tr"></tr>
+        </table>
+        <input type="button" value="Clear" onclick="ClearList()">
+    </section>
+
+	<script type="text/javascript">
+		
+		class Node{
+			constructor(data){
+				this.data = data;
+				this.next = null;
+			}
+		}
+
+		class LinkedList{
+			constructor(data){
+				this.head = new Node(data);
+				this.size = 0; //List-size
+			}
+
+			InsertAt(data, index = this.size){
+				//Pour le OutOfRangeException
+				if (index > this.size || index < 0)
+					return;
+
+				var node = new Node(data);
+
+				if (this.size == 0) //Si c'est le 1er (List vide)
+					this.head = node;
+
+
+				else if (index == 0){ //Sinon (List pas vide) et insertion en 1er
+					node.next = this.head;
+					this.head = node;
+				}
+
+				else //Sinon (List pas vide) insertion (at)
+					for (var i = 0, current = this.head; i <= index; i++, current = current.next) //!!La boucle ne parcour pas le 1er
+						if (i == index - 1){ // Localiser le précédent
+							node.next = current.next; //Lier la 2eme suite de la liste à la nouvelle node
+							current.next = node; //Lier la node à la précédente (L'actuelle ignorer)
+							break;
+						}
+
+				this.size++;
+			}
+
+			RemoveAt(index){
+				//Pour le OutOfRangeException
+				if (index < 0 || index >= this.size)
+					return;
+
+				if (index == 0){ //Si vous voulez supprimer le 1er (Le next sera head)
+					this.head = this.head.next;
+					this.size--;
+					return;
+				}
+
+				for (var i = 0, current = this.head; i <= index; i++, current = current.next) //!!La boucle ne parcour pas le 1er
+					if (i == index -1){ // Localiser le précédent
+						current.next = (current.next.next) ? current.next.next : null; //Le next du précédent sera le next.next(Si pas null) sinon = null
+						break;
+					}
+						
+
+				this.size--;
+			}
+
+			Print(){
+				var value = "";
+
+				for(var i = 0, current = this.head; i < this.size; i++, current = current.next)
+					value += "<td>" + (i+1) + ": " + current.data + "</td>";
+
+				return value;
+			}
+		}
+
+		var linkedList = new LinkedList();
+
+		function Add(){
+			var data = document.getElementById("valueAdd").value;
+			var valueAt = document.getElementById("valueAt").value;
+			valueAt--; // exemple le 1er sera le 0
+
+			var first = document.getElementById("first").checked;
+			var last = document.getElementById("last").checked;
+
+			if (first) linkedList.InsertAt(data, 0);
+			else if (last) linkedList.InsertAt(data);
+			else linkedList.InsertAt(data, valueAt);
+
+			document.getElementById("tr").innerHTML = linkedList.Print();
+		}
+
+		function Remove(){
+			var valueAt = document.getElementById("indexRmv").value;
+			valueAt--; // exemple le 1er sera le 0	
+
+			linkedList.RemoveAt(valueAt);
+
+			document.getElementById("tr").innerHTML = linkedList.Print();
+		}
+
+		function ClearList(){
+			linkedList = new LinkedList();
+			document.getElementById("tr").innerHTML = linkedList.Print();
+		}
+		
+	</script>
+
+</body>
+</html>
