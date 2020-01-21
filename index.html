@@ -26,7 +26,7 @@
         <table>
             <tr id="tr"></tr>
         </table>
-        <input type="button" value="Clear" onclick="ClearList()">
+        <input type="button" value="Reverse" onclick="Reverse()"><input type="button" value="Clear" onclick="ClearList()">
     </section>
 
 	<script type="text/javascript">
@@ -92,6 +92,18 @@
 				this.size--;
 			}
 
+			Reverse(){
+				for (var i = 0, current = this.head, tmp =null, oldNext; i <= this.size; i++, current = oldNext)				
+					if (current != null){
+						oldNext = current.next;
+						current.next = tmp;
+						tmp = current;
+					}
+
+					else
+						this.head = tmp;	
+			}
+
 			Print(){
 				var value = "";
 
@@ -124,6 +136,13 @@
 			valueAt--; // exemple le 1er sera le 0	
 
 			linkedList.RemoveAt(valueAt);
+
+			document.getElementById("tr").innerHTML = linkedList.Print();
+		}
+
+		function Reverse(){
+
+			linkedList.Reverse();
 
 			document.getElementById("tr").innerHTML = linkedList.Print();
 		}
