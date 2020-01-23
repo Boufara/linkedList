@@ -41,8 +41,6 @@
 
     <section>
         <table>
-    	    <input type="button" value="<" onclick="Previous()">
-    	    <input type="button" value=">" onclick="Next()">
             <tr id="tr2"></tr>
         </table>
         <input type="button" value="Reverse" onclick="Reverse()"><input type="button" value="Clear" onclick="ClearList()">
@@ -60,35 +58,45 @@
 
 		class LinkedList{
 			constructor(data){
-				this.head = new Node(data);
+				this.heads = [new Node(data)];
 				this.size = 0; //List-size
+				this.division_List = []; //List de division pour facilité la recherche
 			}
 
-			InsertAt(data, index = this.size){
+			InsertAt(data, indexer = this.size){
 				//Pour le OutOfRangeException
-				if (index > this.size || index < 0)
+				if (indexer > this.size || index < 0)
 					return;
+
+				var index = indexer/1000 - Math.trunc(indexer/1000);
+				var head = Math.trunc(indexer/1000);
+				if (head >= heads.leght) head--;
 
 				var node = new Node(data);
 
 				if (this.size == 0) //Si c'est le 1er (List vide)
-					this.head = node;
-
+					this.heads[0] = node;
 
 				else if (index == 0){ //Sinon (List pas vide) et insertion en 1er
-					node.next = this.head;
-					this.head = node;
+					node.next = this.heads[0];
+					this.heads[0] = node;
 				}
 
-				else //Sinon (List pas vide) insertion (at)
-					for (var i = 0, current = this.head; i <= index; i++, current = current.next) //!!La boucle ne parcour pas le 1er
-						if (i == index - 1){ // Localiser le précédent
+				else { //Sinon (List pas vide) insertion (at)
+
+					for (var i = 0, current = this.heads[head]; i <= index; i++, current = current.next) //!!La boucle ne parcour pas le 1er
+						if (i == index - 1){ // Localiser le précédent de l'element rechercher
 							node.next = current.next; //Lier la 2eme suite de la liste à la nouvelle node
 							current.next = node; //Lier la node à la précédente (L'actuelle ignorer)
-							break;
+							for (var i = 0; i < .length; i++) {
+								[i]
+							}
 						}
+				}
 
 				this.size++;
+
+				if (this.size > 1000) division_List.push()
 			}
 
 			RemoveAt(index = this.size - 1){
@@ -123,27 +131,27 @@
 					}	
 			}
 
-			Print(index = 0){
+			Print(){
 				var value = "";
 
 				for(var i = 0, current = this.head; i < this.size; i++, current = current.next)
-					value += ((i == index)? "<td style='color:red;'>" : "<td>") + (i+1) + ": " + current.data + "</td>";
-
-				return value;
-			}
-
-			PrintOnly(index = 0){
-				var value = "";
-
-				for(var i = 0, current = this.head; i < this.size; i++, current = current.next)
-					if (i == index) value = "<td>" + (i+1) + ": " + current.data + "</td>";
+					value += "<td>" + (i+1) + ": " + current.data + "</td>";
 
 				return value;
 			}
 		}
 
+		class LinkedListDivision{
+			constructor(linkedList){
+				this.heads = [linkedList];
+			}
+
+			AddLinkedList(linkedList){
+				if (linkedList.size > 1000) {}
+			}
+		}
+
 		var linkedList = new LinkedList();
-		var index = 0;
 
 		function Add(){
 			var data = document.getElementById("valueAdd").value;
@@ -158,7 +166,7 @@
 			else linkedList.InsertAt(data, valueAt);
 
 			document.getElementById("tr").innerHTML = linkedList.Print();
-			document.getElementById("tr2").innerHTML = linkedList.PrintOnly();
+			document.getElementById("tr2").innerHTML = linkedList.Print();
 		}
 
 		function Remove(){
@@ -168,7 +176,7 @@
 			linkedList.RemoveAt(valueAt);
 
 			document.getElementById("tr").innerHTML = linkedList.Print();
-			document.getElementById("tr2").innerHTML = linkedList.PrintOnly();
+			document.getElementById("tr2").innerHTML = linkedList.Print();
 		}
 
 		// Pile & File
@@ -182,7 +190,7 @@
 			else if (file) linkedList.InsertAt(data);
 
 			document.getElementById("tr").innerHTML = linkedList.Print();
-			document.getElementById("tr2").innerHTML = linkedList.PrintOnly();
+			document.getElementById("tr2").innerHTML = linkedList.Print();
 		}
 
 		function Remove_FilePile(){
@@ -195,21 +203,8 @@
 			else if (file) linkedList.RemoveAt();
 
 			document.getElementById("tr").innerHTML = linkedList.Print();
-			document.getElementById("tr2").innerHTML = linkedList.PrintOnly();
+			document.getElementById("tr2").innerHTML = linkedList.Print();
 		}
-
-		function Next(){
-			if (index < linkedList.size - 1) index++;
-			document.getElementById("tr").innerHTML = linkedList.Print(index);
-			document.getElementById("tr2").innerHTML = linkedList.PrintOnly(index);
-		}
-
-		function Previous(){
-			if (index > 0) index--;
-			document.getElementById("tr").innerHTML = linkedList.Print(index);
-			document.getElementById("tr2").innerHTML = linkedList.PrintOnly(index);
-		}
-
 
 		function Reverse(){
 
