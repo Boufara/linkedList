@@ -74,3 +74,11 @@ table .img2{
     text-align: center;
     max-width: 80%;
 }
+
+#tr2{
+    margin: 20px;
+}
+
+#tr2>span>audio{
+    width: 33%;
+}

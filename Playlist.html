@@ -50,7 +50,7 @@
         <table>
     	    <input type="button" value="<" onclick="Previous()">
     	    <input type="button" value=">" onclick="Next()">
-            <tr id="tr2"></tr>
+            <div id="tr2"></div>
         </table>
         <input type="button" value="Reverse" onclick="Reverse()"><input type="button" value="Clear" onclick="ClearList()">
     </section>
@@ -140,7 +140,7 @@
 				var value = "";
 
 				for(var i = 0, current = this.head; i < this.size; i++, current = current.next)
-					if (i == index) value = "<td class='audio2'>" + (i+1) + ": <audio controls='controls'><source src='" + current.data + "' /></audio></td>";
+					if (i == index) value = "<span class='audio2'><audio controls='controls'><source src='" + current.data + "' /></audio></span>";
 
 				return value;
 			}
