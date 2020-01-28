@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<title></title>
+</head>
+<body>
+
+	<nav>
+		<ul class="flex">
+			<li><a href="index.html">Linked List (Data)</a></li>
+			<li><a href="gallery.html">Linked List (Gallery)</a></li>
+			<li><a href="playlist.html">Linked List (Playlist)</a></li>
+		</ul>
+	</nav>
+
+    <h1>Linked List (Playlist) - JavaScript</h1>
+	<section>
+        <input type="text" id="valueAdd">
+        <label><input name="radio" type="radio" id="first" checked>First</label>
+        <label><input name="radio" type="radio" id="last">Last</label>
+        <label><input name="radio" type="radio" id="at">At</label>
+        <input type="number" min="1" value="1" id="valueAt">
+        <input type="button" value="Add" onclick="Add()">
+    </section>
+
+    <section>
+        <input type="number" min="1" value="1" id="indexRmv">
+        <input type="button" value="Remove" onclick="Remove()">
+    </section>
+
+    <section>
+        <table>
+            <tr id="playlist" class="flex"></tr>
+        </table>
+        <input type="button" value="Reverse" onclick="Reverse()"><input type="button" value="Clear" onclick="ClearList()">
+    </section>
+
+
+    <h2>File et Pile</h2>
+	<section>
+        <input type="text" id="value_FP">
+        <label><input name="radio2" type="radio" id="pile" checked>Pile</label>
+        <label><input name="radio2" type="radio" id="file">File</label>
+        <input type="button" value="Add" onclick="Add_FilePile()">
+        <input type="button" value="Remove" onclick="Remove_FilePile()">
+    </section>
+
+    <section>
+        <table>
+    	    <input type="button" value="<" onclick="Previous()">
+    	    <input type="button" value=">" onclick="Next()">
+            <tr id="tr2"></tr>
+        </table>
+        <input type="button" value="Reverse" onclick="Reverse()"><input type="button" value="Clear" onclick="ClearList()">
+    </section>
+
+
+	<script type="text/javascript">
+		
+		class Node{
+			constructor(data){
+				this.data = data;
+				this.next = null;
+			}
+		}
+
+		class LinkedList{
+			constructor(data){
+				this.head = new Node(data);
+				this.size = 0; //List-size
+			}
+
+			InsertAt(data, index = this.size){
+				//Pour le OutOfRangeException
+				if (index > this.size || index < 0)
+					return;
+
+				var node = new Node(data);
+
+				if (this.size == 0) //Si c'est le 1er (List vide)
+					this.head = node;
+
+
+				else if (index == 0){ //Sinon (List pas vide) et insertion en 1er
+					node.next = this.head;
+					this.head = node;
+				}
+
+				else //Sinon (List pas vide) insertion (at)
+					for (var i = 0, current = this.head; i <= index; i++, current = current.next) //!!La boucle ne parcour pas le 1er
+						if (i == index - 1){ //Localiser le précédent
+							node.next = current.next; //Lier la 2eme suite de la liste à la nouvelle node
+							current.next = node; //Lier la node à la précédente (L'actuelle ignorer)
+							break;
+						}
+
+				this.size++;
+			}
+
+			RemoveAt(index = this.size - 1){
+				//Pour le OutOfRangeException
+				if (index < 0 || index >= this.size)
+					return;
+
+				if (index == 0){ //Si vous voulez supprimer le 1er (Le next sera head)
+					this.head = this.head.next;
+					this.size--;
+					return;
+				}
+
+				for (var i = 0, current = this.head; i <= index; i++, current = current.next) //!!La boucle ne parcour pas le 1er
+					if (i == index -1) // Localiser le précédent
+						current.next = (current.next.next) ? current.next.next : null; //Le next du précédent sera le next.next(Si pas null) sinon = null
+
+				this.size--;
+			}
+
+			Reverse(){
+				for (var i = 0, current = this.head, tmp = null, oldNext; i <= this.size; i++, current = oldNext)// Déplacement par l'encient Next		
+					if (current == null)
+						this.head = tmp;
+					else{ // Affecter
+						oldNext = current.next;
+						current.next = tmp;
+						tmp = current;
+					}	
+			}
+
+			Print(index = 0){
+				var value = "";
+
+				for(var i = 0, current = this.head; i < this.size; i++, current = current.next)
+					value += ((i == index)? "<td style='color:red;'>" : "<td>") + (i+1) + ": " + current.data + "</td><br>";
+
+				return value;
+			}
+
+			PrintOnly(index = 0){
+				var value = "";
+
+				for(var i = 0, current = this.head; i < this.size; i++, current = current.next)
+					if (i == index) value = "<td class='audio2'>" + (i+1) + ": <audio controls='controls'><source src='" + current.data + "' /></audio></td>";
+
+				return value;
+			}
+		}
+
+		var linkedList = new LinkedList();
+		var index = 0;
+
+		linkedList.InsertAt("audio/Alan Walker - Alone.mp3");
+		linkedList.InsertAt("audio/Alan Walker - Faded.mp3");
+		linkedList.InsertAt("audio/Alan Walker - Sing Me To Sleep.mp3");
+		document.getElementById("playlist").innerHTML = linkedList.Print();
+		document.getElementById("tr2").innerHTML = linkedList.PrintOnly();
+
+		function Add(){
+			var data = document.getElementById("valueAdd").value;
+			var valueAt = document.getElementById("valueAt").value;
+			valueAt--; // exemple le 1er sera le 0
+
+			if (document.getElementById("first").checked) 
+				linkedList.InsertAt(data, 0);
+			else if (document.getElementById("last").checked) 
+				linkedList.InsertAt(data);
+			else linkedList.InsertAt(data, valueAt);
+
+			document.getElementById("playlist").innerHTML = linkedList.Print();
+			document.getElementById("tr2").innerHTML = linkedList.PrintOnly();
+		}
+
+		function Remove(){
+			var valueAt = document.getElementById("indexRmv").value;
+			valueAt--; // exemple le 1er sera le 0	
+
+			linkedList.RemoveAt(valueAt);
+
+			document.getElementById("playlist").innerHTML = linkedList.Print();
+			document.getElementById("tr2").innerHTML = linkedList.PrintOnly();
+		}
+
+		// Pile & File
+		function Add_FilePile(){
+			var data = document.getElementById("value_FP").value;
+
+			if (document.getElementById("pile").checked) 
+				linkedList.InsertAt(data, 0);
+			else if (document.getElementById("file").checked) 
+				linkedList.InsertAt(data);
+
+			document.getElementById("playlist").innerHTML = linkedList.Print();
+			document.getElementById("tr2").innerHTML = linkedList.PrintOnly();
+		}
+
+		function Remove_FilePile(){
+			var data = document.getElementById("value_FP").value;
+
+			if (document.getElementById("pile").checked) 
+				linkedList.RemoveAt(0);
+			else if (document.getElementById("file").checked) 
+				linkedList.RemoveAt();
+
+			document.getElementById("playlist").innerHTML = linkedList.Print();
+			document.getElementById("tr2").innerHTML = linkedList.PrintOnly();
+		}
+
+		function Next(){
+			if (index < linkedList.size - 1) index++;
+			document.getElementById("playlist").innerHTML = linkedList.Print(index);
+			document.getElementById("tr2").innerHTML = linkedList.PrintOnly(index);
+		}
+
+		function Previous(){
+			if (index > 0) index--;
+			document.getElementById("playlist").innerHTML = linkedList.Print(index);
+			document.getElementById("tr2").innerHTML = linkedList.PrintOnly(index);
+		}
+
+
+		function Reverse(){
+			linkedList.Reverse();
+
+			document.getElementById("playlist").innerHTML = linkedList.Print();
+			document.getElementById("tr2").innerHTML = linkedList.Print();
+		}
+
+		function ClearList(){
+			linkedList = new LinkedList();
+			document.getElementById("playlist").innerHTML = linkedList.Print();
+			document.getElementById("tr2").innerHTML = linkedList.Print();
+		}
+		
+	</script>
+
+</body>
+</html>

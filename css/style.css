@@ -5,6 +5,20 @@ body{
     font-family: roboto;
 }
 
+.flex{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+nav>ul{
+    justify-content: flex-end;
+}
+
+nav>ul>li{
+    list-style: none;
+    margin-right: 24px;
+}
+
 h1{
     margin: 20px;
     font-size: 2.4em;
@@ -17,7 +31,7 @@ input[type="button"]{
     background-color: rgba(80, 80, 80, 0.5);
     color: white;
     font-size: 18px;
-    width: 120px;
+    min-width: 120px;
     height: 50px;
 }
 
@@ -34,7 +48,7 @@ input{
 
 input[type="radio"]{
     margin: 8px;
-    height: 0px;
+    height: 12px;
 }
 
 table{
@@ -44,6 +58,19 @@ table{
 table td{
     border: 1px dashed black;
     border-radius: 4px;
-    padding: 24px;
-    margin-right: 20px;
+    padding: 20px;
+    margin: 5px;
+    min-width: 32px;
+    text-align: center;
+    max-width: 400px;
+    max-height: 400px;
+}
+
+img{
+    width: 100%;
+}
+
+table .img2{
+    text-align: center;
+    max-width: 80%;
 }
